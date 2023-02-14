@@ -7,7 +7,7 @@ workflows:
       app_store_connect: codemagic
     environment:
       ios_signing:
-        distribution_type: development
+        distribution_type: app_store
         bundle_identifier: me.kokecacao.swingsimulator
       groups:
         - unity_credentials
