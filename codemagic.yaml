@@ -22,9 +22,9 @@ workflows:
       - name: Activate Unity License
         script: |
           $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit -logFile \
-            -serial ${UNITY_SERIAL?} \
-            -username ${UNITY_EMAIL?} \
-            -password ${UNITY_PASSWORD?}
+            -serial ${UNITY_SERIAL} \
+            -username ${UNITY_EMAIL} \
+            -password ${UNITY_PASSWORD}
       - name: Generate the Xcode project from Unity
         script: |
           $UNITY_HOME/Contents/MacOS/Unity -batchmode \
@@ -55,8 +55,8 @@ workflows:
           script: | 
             /Applications/Unity\ Hub.app/Contents/Frameworks/UnityLicensingClient_V1.app/Contents/MacOS/Unity.Licensing.Client \
             --return-ulf \
-            --username ${UNITY_EMAIL?} \
-            --password ${UNITY_PASSWORD?}
+            --username ${UNITY_EMAIL} \
+            --password ${UNITY_PASSWORD}
       email:
         recipients:
           - su.chen.hanke@gmail.com
