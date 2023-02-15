@@ -21,8 +21,8 @@ workflows:
     scripts:
       - name: Activate Unity License
         script: |
-          touch ./unity.log
-          echo "activating license for ${UNITY_EMAIL}" && $UNITY_HOME/Contents/MacOS/Unity -batchmode -nographics -logFile ./unity.log \
+          touch unity.log
+          echo "activating license for ${UNITY_EMAIL}" && $UNITY_HOME/Contents/MacOS/Unity -batchmode -nographics -logFile unity.log \
             -serial ${UNITY_SERIAL} \
             -username ${UNITY_EMAIL} \
             -password ${UNITY_PASSWORD}
