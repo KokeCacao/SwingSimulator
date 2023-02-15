@@ -25,24 +25,26 @@ workflows:
           touch ${LOG_FILE}
           $UNITY_HOME/Contents/MacOS/Unity \
             -quit \
+            -batchmode \
             -nographics \
             -logFile ${LOG_FILE} \
             -serial ${UNITY_SERIAL} \
-            -username ${UNITY_EMAIL} \
-            -password ${UNITY_PASSWORD}
-          cat ./unity.log
+            -username "$UNITY_EMAIL" \
+            -password "$UNITY_PASSWORD"
+          cat ${LOG_FILE}
       - name: Generate the Xcode project from Unity
         script: |
           LOG_FILE=unity.log
           $UNITY_HOME/Contents/MacOS/Unity -batchmode \
             -quit \
+            -batchmode \
             -nographics \
             -logFile ${LOG_FILE} \
             -projectPath . \
             -executeMethod BuildScript.$BUILD_SCRIPT \
             -serial ${UNITY_SERIAL} \
-            -username ${UNITY_EMAIL} \
-            -password ${UNITY_PASSWORD}
+            -username "$UNITY_EMAIL" \
+            -password "$UNITY_PASSWORD"
           echo "unity returned code $?. here is log file:"
           cat ${LOG_FILE}
       - name: Set up code signing settings on Xcode project
@@ -71,8 +73,8 @@ workflows:
           script: | 
             /Applications/Unity\ Hub.app/Contents/Frameworks/UnityLicensingClient_V1.app/Contents/MacOS/Unity.Licensing.Client \
             --return-ulf \
-            --username ${UNITY_EMAIL} \
-            --password ${UNITY_PASSWORD}
+            -username "$UNITY_EMAIL" \
+            -password "$UNITY_PASSWORD"
             rm -rf "/Library/Application Support/Unity/Unity_lic.ulf"
       email:
         recipients:
