@@ -23,31 +23,20 @@ workflows:
         script: |
           LOG_FILE=unity.log
           touch ${LOG_FILE}
-          echo "activating license for ${UNITY_EMAIL}" && $UNITY_HOME/Contents/MacOS/Unity -batchmode -nographics -logFile ${LOG_FILE} -createManualActivationFile \
+          $UNITY_HOME/Contents/MacOS/Unity -quit -batchmode -nographics -logFile ${LOG_FILE} \
             -serial ${UNITY_SERIAL} \
             -username ${UNITY_EMAIL} \
             -password ${UNITY_PASSWORD}
-          echo "unity returned code $?. see files: $(ls *.alf)"
-          FILE_PATH=$(ls *.alf)
-          echo "current directory is: ${PWD}, copying to /Library/Application Support/Unity/Unity_lic.ulf"
-          cp $(ls *.alf) "/Library/Application Support/Unity/Unity_lic.ulf"
-          echo "copied: $(ls /Library/Application Support/Unity/*.ulf)"
-          cat ./unity.log
-          $UNITY_HOME/Contents/MacOS/Unity -batchmode -nographics -logFile ${LOG_FILE} -manualLicenseFile ${FILE_PATH} \
-            -serial ${UNITY_SERIAL} \
-            -username ${UNITY_EMAIL} \
-            -password ${UNITY_PASSWORD}
-          echo "unity returned code $?. file should not exist: $(ls *.alf)"
           cat ./unity.log
       - name: Generate the Xcode project from Unity
         script: |
           LOG_FILE=unity.log
           $UNITY_HOME/Contents/MacOS/Unity -batchmode \
+            -quit \
             -logFile ${LOG_FILE} \
             -projectPath . \
             -executeMethod BuildScript.$BUILD_SCRIPT \
             -nographics \
-            -manualLicenseFile "/Library/Application Support/Unity/Unity_lic.ulf" \
             -serial ${UNITY_SERIAL} \
             -username ${UNITY_EMAIL} \
             -password ${UNITY_PASSWORD}
