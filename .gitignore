@@ -8,3 +8,5 @@ Assembly-CSharp.csproj
 .vscode
 .vs
 obj
+Build
+Build_BurstDebugInformation_DoNotShip
