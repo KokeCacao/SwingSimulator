@@ -39,12 +39,13 @@ workflows:
           cat ./unity.log
       - name: Generate the Xcode project from Unity
         script: |
+          LOG_FILE=unity.log
           $UNITY_HOME/Contents/MacOS/Unity -batchmode \
-            -quit \
-            -logFile \
+            -logFile ${LOG_FILE} \
             -projectPath . \
             -executeMethod BuildScript.$BUILD_SCRIPT \
             -nographics \
+            -manualLicenseFile $(ls *.alf) \
             -serial ${UNITY_SERIAL} \
             -username ${UNITY_EMAIL} \
             -password ${UNITY_PASSWORD}
