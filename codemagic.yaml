@@ -65,6 +65,8 @@ workflows:
           cd $UNITY_IOS_DIR && agvtool new-version -all $BUILD_NUMBER && echo "success!" || echo "failed! will not increment build number"
       - name: Build ipa for distribution
         script: |
+          echo "current directory at ${PWD} contains folder:"
+          ls -la
           xcode-project build-ipa \
             --project "$UNITY_IOS_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
