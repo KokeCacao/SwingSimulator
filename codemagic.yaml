@@ -23,7 +23,10 @@ workflows:
         script: |
           LOG_FILE=unity.log
           touch ${LOG_FILE}
-          $UNITY_HOME/Contents/MacOS/Unity -quit -batchmode -nographics -logFile ${LOG_FILE} \
+          $UNITY_HOME/Contents/MacOS/Unity \
+            -quit \
+            -nographics \
+            -logFile ${LOG_FILE} \
             -serial ${UNITY_SERIAL} \
             -username ${UNITY_EMAIL} \
             -password ${UNITY_PASSWORD}
@@ -33,10 +36,10 @@ workflows:
           LOG_FILE=unity.log
           $UNITY_HOME/Contents/MacOS/Unity -batchmode \
             -quit \
+            -nographics \
             -logFile ${LOG_FILE} \
             -projectPath . \
             -executeMethod BuildScript.$BUILD_SCRIPT \
-            -nographics \
             -serial ${UNITY_SERIAL} \
             -username ${UNITY_EMAIL} \
             -password ${UNITY_PASSWORD}
