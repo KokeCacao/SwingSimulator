@@ -13,7 +13,7 @@ workflows:
         - unity_credentials
       vars:
         BUILD_SCRIPT: BuildIos
-        UNITY_IOS_DIR: ios
+        UNITY_IOS_DIR: Build
         XCODE_PROJECT: "Unity-iPhone.xcodeproj"
         XCODE_SCHEME: "Unity-iPhone"
         APP_STORE_APP_ID: 1671675115
