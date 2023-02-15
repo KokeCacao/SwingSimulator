@@ -22,11 +22,13 @@ workflows:
       - name: Activate Unity License
         script: |
           touch unity.log
-          echo "activating license for ${UNITY_EMAIL}" && $UNITY_HOME/Contents/MacOS/Unity -batchmode -nographics -logFile unity.log \
+          echo "activating license for ${UNITY_EMAIL}" && $UNITY_HOME/Contents/MacOS/Unity -batchmode -nographics -logFile -createManualActivationFile unity.log \
             -serial ${UNITY_SERIAL} \
             -username ${UNITY_EMAIL} \
             -password ${UNITY_PASSWORD}
           cat ./unity.log
+          echo "unity returned code $?. see files: $(ls *.alf)"
+          echo "current directory is: $PWD"
       - name: Generate the Xcode project from Unity
         script: |
           $UNITY_HOME/Contents/MacOS/Unity -batchmode \
