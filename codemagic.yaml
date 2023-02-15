@@ -29,7 +29,9 @@ workflows:
             -password ${UNITY_PASSWORD}
           echo "unity returned code $?. see files: $(ls *.alf)"
           FILE_PATH=$(ls *.alf)
-          echo "current directory is: $PWD"
+          echo "current directory is: ${PWD}, copying to /Library/Application Support/Unity/Unity_lic.ulf"
+          cp $(ls *.alf) "/Library/Application Support/Unity/Unity_lic.ulf"
+          echo "copied: $(ls /Library/Application Support/Unity/*.ulf)"
           cat ./unity.log
           $UNITY_HOME/Contents/MacOS/Unity -batchmode -nographics -logFile ${LOG_FILE} -manualLicenseFile ${FILE_PATH} \
             -serial ${UNITY_SERIAL} \
@@ -49,6 +51,8 @@ workflows:
             -serial ${UNITY_SERIAL} \
             -username ${UNITY_EMAIL} \
             -password ${UNITY_PASSWORD}
+          echo "unity returned code $?. here is log file:"
+          cat ${LOG_FILE}
       - name: Set up code signing settings on Xcode project
         script: |
           xcode-project use-profiles
