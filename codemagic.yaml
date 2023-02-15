@@ -30,9 +30,9 @@ workflows:
           echo "unity returned code $?. see files: $(ls *.alf)"
           FILE_PATH=$(ls *.alf)
           echo "current directory is: $PWD"
-          ACTIVATION_OUTPUT=$($UNITY_HOME/Contents/MacOS/Unity -nographics -logFile ${LOG_FILE} -manualLicenseFile ${FILE_PATH})
-          echo "activation output: ${ACTIVATION_OUTPUT}" > ${LOG_FILE}
-          echo "unity returned code $?."
+          cat ./unity.log
+          $UNITY_HOME/Contents/MacOS/Unity -nographics -logFile ${LOG_FILE} -manualLicenseFile ${FILE_PATH}
+          echo "unity returned code $?. file should not exist: $(ls *.alf)"
           cat ./unity.log
       - name: Generate the Xcode project from Unity
         script: |
@@ -41,7 +41,10 @@ workflows:
             -logFile \
             -projectPath . \
             -executeMethod BuildScript.$BUILD_SCRIPT \
-            -nographics
+            -nographics \
+            -serial ${UNITY_SERIAL} \
+            -username ${UNITY_EMAIL} \
+            -password ${UNITY_PASSWORD}
       - name: Set up code signing settings on Xcode project
         script: |
           xcode-project use-profiles
