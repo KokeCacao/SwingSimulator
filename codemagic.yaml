@@ -60,9 +60,9 @@ workflows:
         script: |
           BUILD_NUMBER=($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APP_ID") + 1)
           echo "incrementing build number to $BUILD_NUMBER"
-          echo "current directory at ${PWD} contains folder: $(ls)"
-          cd $UNITY_IOS_DIR
-          agvtool new-version -all $BUILD_NUMBER
+          echo "current directory at ${PWD} contains folder:"
+          ls -la
+          cd $UNITY_IOS_DIR && agvtool new-version -all $BUILD_NUMBER && echo "success!" || echo "failed! will not increment build number"
       - name: Build ipa for distribution
         script: |
           xcode-project build-ipa \
