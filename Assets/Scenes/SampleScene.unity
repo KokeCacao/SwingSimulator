@@ -2631,6 +2631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a882d9784a9c16309f7a085249aba63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialDeathCount: 20
   MainCamera: {fileID: 519420031}
   ViewportCamera: {fileID: 2011930025}
   PlayerGameObject: {fileID: 891781693}
@@ -2653,6 +2654,7 @@ MonoBehaviour:
   - {fileID: 49892221}
   officeAmbiance: {fileID: 1297341555}
   spaceAmbiance: {fileID: 2023198817}
+  viewPort: {fileID: 1011501342}
 --- !u!4 &504534733
 Transform:
   m_ObjectHideFlags: 0
@@ -5570,7 +5572,7 @@ GameObject:
   - component: {fileID: 1011501345}
   - component: {fileID: 1011501344}
   m_Layer: 0
-  m_Name: PreviewCameraFake
+  m_Name: ViewPort
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5584,7 +5586,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1011501342}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 390, y: 753, z: 490}
+  m_LocalPosition: {x: 404, y: 748.7, z: 501}
   m_LocalScale: {x: 220, y: 110, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6593,7 +6595,7 @@ GameObject:
   - component: {fileID: 1223493452}
   - component: {fileID: 1223493451}
   m_Layer: 0
-  m_Name: paralax_space2
+  m_Name: SpaceBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10695,7 +10697,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -10708,8 +10710,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0.01
+  far clip plane: 100000
   field of view: 60
   orthographic: 0
   orthographic size: 5

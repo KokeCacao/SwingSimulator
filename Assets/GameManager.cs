@@ -19,9 +19,12 @@ public class GameManager : MonoBehaviour
   private const float WAIT_TIME = 15.0f;
   private const float TIME_POW = 1.15f;
   private const float END_GAME_SCORE = 300.0f;
+  private const float SUPER_END_GAME_SCORE = 1200.0f;
+  private const float END_CREDIT_SCORE = 3000.0f;
   private const int SMALL_FONT_SIZE = 24;
   private const int BIG_FONT_SIZE = 48;
 
+  [SerializeField] private int initialDeathCount = 0; // for cheating
   [SerializeField] private Camera MainCamera;
   [SerializeField] private Camera ViewportCamera;
   [SerializeField] private GameObject PlayerGameObject;
@@ -38,6 +41,7 @@ public class GameManager : MonoBehaviour
   [SerializeField] private List<MultiSprite> multiSprites;
   [SerializeField] private AudioSource officeAmbiance;
   [SerializeField] private AudioSource spaceAmbiance;
+  [SerializeField] private GameObject viewPort;
 
   private List<GameObject> PlayerChildren;
   private List<GameObject> SwingChildren;
@@ -61,6 +65,8 @@ public class GameManager : MonoBehaviour
 
   void Awake()
   {
+    deathCount = initialDeathCount;
+
     // init lists
     PlayerChildren = new List<GameObject>();
     SwingChildren = new List<GameObject>();
@@ -218,8 +224,8 @@ public class GameManager : MonoBehaviour
     {
       // g = 4/3 (pi * p * R * G)
       float height = rigidbody.transform.position.y + Earth.transform.localScale.x;
-      float gravityDivider = 3.0f;
-      float earthGravity = (1.0f / (deathCount / gravityDivider + 1.0f)) * GRAVITY / Mathf.Pow((1 + height / Earth.transform.localScale.x), 2);
+      float gravityMultiplier = 1.0f;
+      float earthGravity = (1.0f / (deathCount / gravityMultiplier + 1.0f)) * GRAVITY / Mathf.Pow((1 + height / Earth.transform.localScale.x), 2);
       Vector2 earthVec = Earth.transform.position - rigidbody.transform.position;
       earthVec.Normalize();
 
@@ -239,20 +245,33 @@ public class GameManager : MonoBehaviour
       }
     }
 
-    // let MainCamera follow HeadBody's position
-    MainCamera.transform.position = new Vector3(HeadBody.transform.position.x, HeadBody.transform.position.y, -(HeadBody.transform.position.magnitude + 10.0f));
-    // MainCamera.orthographicSize = SCREEN_SIZE + HeadBody.transform.position.magnitude;
-    MainCamera.transform.rotation = Quaternion.Euler(0, Mathf.Clamp(-HeadBody.transform.position.x * 0.1f, -45, 45), 0);
+    float rawScore = HeadBody.transform.position.magnitude;
 
-    // set ViewportCamera to follow MainCamera
-    ViewportCamera.transform.position = MainCamera.transform.position;
-    // ViewportCamera.transform.rotation = MainCamera.transform.rotation; // No rotation though
+    // let MainCamera follow HeadBody's position
+    Vector3 cameraPos = new Vector3(HeadBody.transform.position.x, HeadBody.transform.position.y, -(rawScore + 10.0f));
+    Quaternion cameraRot = Quaternion.Euler(0, Mathf.Clamp(-HeadBody.transform.position.x * 0.1f, -45, 45), 0);
+
+    // MainCamera.orthographicSize = SCREEN_SIZE + rawScore;
+    if (rawScore > SUPER_END_GAME_SCORE && gameState == GameState.LaunchState)
+    {
+      MainCamera.transform.position = viewPort.transform.position - (Vector3.forward * (80.0f + 1.0f * (rawScore - SUPER_END_GAME_SCORE)));
+      MainCamera.transform.rotation = Quaternion.Euler(0, 0, 0);
+    }
+    else
+    {
+      MainCamera.transform.position = cameraPos;
+      MainCamera.transform.rotation = cameraRot;
+    }
+
+    // set ViewportCamera to follow the same thing
+    ViewportCamera.transform.position = cameraPos;
+    ViewportCamera.transform.rotation = cameraRot;
 
     // calculate distance between earth and player
-    score = Mathf.Max(score, HeadBody.transform.position.magnitude);
+    score = Mathf.Max(score, rawScore);
 
     // change audio volume
-    officeAmbiance.volume = SigmoidFromZeroShifted(HeadBody.transform.position.magnitude, END_GAME_SCORE);
+    officeAmbiance.volume = SigmoidFromZeroShifted(rawScore, END_GAME_SCORE);
     spaceAmbiance.volume = 1.0f - officeAmbiance.volume;
 
     switch (gameState)
@@ -266,6 +285,11 @@ public class GameManager : MonoBehaviour
         RightScoreText.fontSize = BIG_FONT_SIZE;
         if (score > END_GAME_SCORE) {
           RightScoreText.text += "\nSometimes, [Space] travel in vast [Space] needs some [Space]";
+        }
+        if (score > END_CREDIT_SCORE) {
+          RightScoreText.text = "";
+          ScoreText.text = "SwingSimulator\n- by Koke_Cacao";
+          ScoreText.gameObject.SetActive(true);
         }
 
         if (waitTime > 0.0f)
@@ -404,7 +428,11 @@ public class GameManager : MonoBehaviour
           PlayerRelease();
           break;
         case GameState.LaunchState:
-          HeadBody.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, -1000.0f), ForceMode2D.Impulse);
+          // calculate vector to origin
+          Vector2 forceDir = (Vector2)Earth.transform.position - (Vector2)HeadBody.transform.position;
+          forceDir.Normalize();
+          HeadBody.GetComponent<Rigidbody2D>().AddForce(forceDir * 100.0f, ForceMode2D.Impulse);
+          ScoreText.gameObject.SetActive(false);
           break;
         case GameState.DeadState:
           OnControlZ();
