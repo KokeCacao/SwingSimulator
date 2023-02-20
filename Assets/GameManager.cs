@@ -237,7 +237,7 @@ public class GameManager : MonoBehaviour
   void Update()
   {
 
-    if (Input.GetKey(KeyCode.LeftControl))
+    if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
     {
       if (Input.GetKeyUp(KeyCode.Z))
       {
@@ -402,8 +402,10 @@ public class GameManager : MonoBehaviour
         break;
       case GameState.DeadState:
         gameState = GameState.ReturnState;
+        RightScoreText.text = "Reassembling materials using cached data...\nPlease be patient and do not unplug your computer.";
+        RightScoreText.fontSize = SMALL_FONT_SIZE;
+        RightScoreText.gameObject.SetActive(true);
         ScoreText.gameObject.SetActive(false);
-        RightScoreText.gameObject.SetActive(false);
         waitTime = WAIT_TIME;
         // and change sprite
         UpdateSprite();
